@@ -234,17 +234,22 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) {
-      let msg = 'Upload failed';
-      try {
-        const err = await res.json();
-        if (err.error) msg = err.error;
-      } catch {
-        // Not JSON
+
+    const responseText = await res.text();
+    let data: any;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      if (!res.ok) {
+        throw new Error(`Upload failed (${res.status}): ${responseText.slice(0, 150) || res.statusText}`);
       }
-      throw new Error(msg);
+      throw new Error(`Server returned non-JSON response: ${responseText.slice(0, 150)}`);
     }
-    return res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || `Upload failed with status ${res.status}`);
+    }
+    return data;
   },
 
   async deleteDocument(id: string): Promise<{ success: boolean }> {
@@ -267,17 +272,22 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(options)
     });
-    if (!res.ok) {
-      let msg = 'AI generation failed';
-      try {
-        const err = await res.json();
-        if (err.error) msg = err.error;
-      } catch {
-        // Not JSON
+
+    const responseText = await res.text();
+    let data: any;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      if (!res.ok) {
+        throw new Error(`AI generation failed (${res.status}): ${responseText.slice(0, 150) || res.statusText}`);
       }
-      throw new Error(msg);
+      throw new Error(`Server returned non-JSON response: ${responseText.slice(0, 150)}`);
     }
-    return res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || `AI question generation failed with status ${res.status}`);
+    }
+    return data;
   },
 
   // Participant Join
@@ -291,17 +301,22 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) {
-      let msg = 'Failed to join game';
-      try {
-        const err = await res.json();
-        if (err.error) msg = err.error;
-      } catch {
-        // Not JSON
+
+    const responseText = await res.text();
+    let data: any;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      if (!res.ok) {
+        throw new Error(`Failed to join (${res.status}): ${responseText.slice(0, 150) || res.statusText}`);
       }
-      throw new Error(msg);
+      throw new Error(`Server returned non-JSON response: ${responseText.slice(0, 150)}`);
     }
-    return res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to join game');
+    }
+    return data;
   },
 
   async getParticipants(gameId: string): Promise<Participant[]> {

@@ -19,12 +19,44 @@
         "game-social-media",
         "game-digital-skills",
         "game-1790591591363-bk8v",
-        "game-1790592957186-py0a"
+        "game-1790592957186-py0a",
+        "game-1790594637270-g7f0"
       ],
       "createdAt": "2026-09-28T10:16:23.085Z"
     }
   ],
   "games": [
+    {
+      "id": "game-1790594637270-g7f0",
+      "eventId": "evt-skill-africa-50",
+      "name": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "description": "Quiz session based on Smm lizzy_20260924_140721_0000.pdf",
+      "joinCode": "J4ROQN",
+      "status": "READY",
+      "questionIds": [
+        "q-ai-1790594613994-8b5gr",
+        "q-ai-1790594613994-av1j6",
+        "q-ai-1790594613994-yr0wr",
+        "q-ai-1790594613994-e0pfi",
+        "q-ai-1790594613994-py6rr",
+        "q-ai-1790594613994-l4w6v",
+        "q-ai-1790594613994-mxhor",
+        "q-ai-1790594613994-92orf",
+        "q-ai-1790594613994-exdpt",
+        "q-ai-1790594613994-zwukr"
+      ],
+      "timePerQuestion": 10,
+      "customQuestionTimeLimits": {},
+      "difficultyTimeLimits": {},
+      "questionTypeTimeLimits": {},
+      "pointsPerCorrect": 1,
+      "leaderboardVisibility": "AFTER_EACH",
+      "randomizeQuestions": false,
+      "randomizeOptions": false,
+      "maxParticipants": 1000,
+      "currentQuestionIndex": 0,
+      "createdAt": "2026-09-28T11:23:57.270Z"
+    },
     {
       "id": "game-1790592957186-py0a",
       "eventId": "evt-skill-africa-50",
@@ -225,6 +257,422 @@
     }
   ],
   "questions": [
+    {
+      "id": "q-doc-1790601783400-2-azx5",
+      "text": "Based on the text in \"Smm lizzy_20260924_140721_0000.pdf\" (Page 2), which of the following is correct?",
+      "options": [
+        {
+          "id": "A",
+          "text": "the process of"
+        },
+        {
+          "id": "B",
+          "text": "planning, creating, publishing, managing and"
+        },
+        {
+          "id": "C",
+          "text": "analyzing content for a brand or individual"
+        },
+        {
+          "id": "D",
+          "text": "across social media platforms."
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "Directly stated in the document: \"analyzing content for a brand or individual\"",
+      "category": "Page 2",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 2,
+      "status": "PENDING",
+      "createdAt": "2026-09-28T13:23:03.400Z"
+    },
+    {
+      "id": "q-doc-1790601783399-1-eiv9",
+      "text": "Based on the text in \"Smm lizzy_20260924_140721_0000.pdf\" (Page 2), which of the following is correct?",
+      "options": [
+        {
+          "id": "A",
+          "text": "the process of"
+        },
+        {
+          "id": "B",
+          "text": "planning, creating, publishing, managing and"
+        },
+        {
+          "id": "C",
+          "text": "analyzing content for a brand or individual"
+        },
+        {
+          "id": "D",
+          "text": "across social media platforms."
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "Directly stated in the document: \"planning, creating, publishing, managing and\"",
+      "category": "Page 2",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 2,
+      "status": "PENDING",
+      "createdAt": "2026-09-28T13:23:03.399Z"
+    },
+    {
+      "id": "q-doc-1790601783399-0-6pdy",
+      "text": "According to \"Smm lizzy_20260924_140721_0000.pdf\", what is stated regarding Social Media Management?",
+      "options": [
+        {
+          "id": "A",
+          "text": "the process of"
+        },
+        {
+          "id": "B",
+          "text": "planning, creating, publishing, managing and"
+        },
+        {
+          "id": "C",
+          "text": "analyzing content for a brand or individual"
+        },
+        {
+          "id": "D",
+          "text": "across social media platforms."
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "Directly stated in the document: \"Social Media Management is the process of\"",
+      "category": "Page 2",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 2,
+      "status": "PENDING",
+      "createdAt": "2026-09-28T13:23:03.399Z"
+    },
+    {
+      "id": "q-ai-1790594613994-zwukr",
+      "text": "In the class activity example, what is the goal for the Nigerian skincare brand?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Build a new website"
+        },
+        {
+          "id": "B",
+          "text": "Increase awareness and sales"
+        },
+        {
+          "id": "C",
+          "text": "Hire more staff"
+        },
+        {
+          "id": "D",
+          "text": "Expand to international markets"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "The document states the goal for the Nigerian skincare brand is to 'Increase awareness and sales'.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "EASY",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 11,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-exdpt",
+      "text": "Which of the following is categorized as an 'Analytics' skill for an SMM?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Optimization"
+        },
+        {
+          "id": "B",
+          "text": "Scheduling"
+        },
+        {
+          "id": "C",
+          "text": "Video/content creation"
+        },
+        {
+          "id": "D",
+          "text": "Research"
+        }
+      ],
+      "correctAnswer": "A",
+      "explanation": "The document lists 'Optimization' under the 'ANALYTICS' category for the skills of an SMM.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 10,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-92orf",
+      "text": "Which of the following is categorized as a 'Management' skill for an SMM?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Reporting"
+        },
+        {
+          "id": "B",
+          "text": "Client communication"
+        },
+        {
+          "id": "C",
+          "text": "Design"
+        },
+        {
+          "id": "D",
+          "text": "Planning"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "The document lists 'Client communication' under the 'MANAGEMENT' category for the skills of an SMM.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 9,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-mxhor",
+      "text": "Which of the following is categorized as a 'Creative' skill for an SMM?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Research"
+        },
+        {
+          "id": "B",
+          "text": "Optimization"
+        },
+        {
+          "id": "C",
+          "text": "Copywriting"
+        },
+        {
+          "id": "D",
+          "text": "Client communication"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "The document lists 'Copywriting' under the 'CREATIVE' category for the skills of an SMM.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 8,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-l4w6v",
+      "text": "Which of the following is categorized as a 'Strategy' skill for an SMM?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Design"
+        },
+        {
+          "id": "B",
+          "text": "Goal setting"
+        },
+        {
+          "id": "C",
+          "text": "Scheduling"
+        },
+        {
+          "id": "D",
+          "text": "Metrics"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "The document lists 'Goal setting' under the 'STRATEGY' category for the skills of an SMM.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 7,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-py6rr",
+      "text": "Under the 'Understanding the Brand' section, which question is asked?",
+      "options": [
+        {
+          "id": "A",
+          "text": "What is our annual budget?"
+        },
+        {
+          "id": "B",
+          "text": "Who are we talking to?"
+        },
+        {
+          "id": "C",
+          "text": "How many employees do we have?"
+        },
+        {
+          "id": "D",
+          "text": "What is our office location?"
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "The document lists 'Who are we talking to?' under the 'Understanding the Brand' section.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "EASY",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 6,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-e0pfi",
+      "text": "Which of the following is NOT listed as a reason why businesses need social media?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Build awareness"
+        },
+        {
+          "id": "B",
+          "text": "Drive sales"
+        },
+        {
+          "id": "C",
+          "text": "Build trust"
+        },
+        {
+          "id": "D",
+          "text": "Manage employee payroll"
+        }
+      ],
+      "correctAnswer": "D",
+      "explanation": "The document lists 'Build awareness', 'Drive sales', and 'Build trust' as reasons businesses need social media, but does not mention 'Manage employee payroll'.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "MEDIUM",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 4,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-yr0wr",
+      "text": "Which social media platform is described as being for 'Professional & B2B content'?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Instagram"
+        },
+        {
+          "id": "B",
+          "text": "TikTok"
+        },
+        {
+          "id": "C",
+          "text": "LinkedIn"
+        },
+        {
+          "id": "D",
+          "text": "Facebook"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "The document states: 'LinkedIn — Professional & B2B content'.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "EASY",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 5,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-av1j6",
+      "text": "Which of the following is listed as a responsibility of an SMM?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Financial auditing"
+        },
+        {
+          "id": "B",
+          "text": "Product manufacturing"
+        },
+        {
+          "id": "C",
+          "text": "Analytics & reporting"
+        },
+        {
+          "id": "D",
+          "text": "Human resources management"
+        }
+      ],
+      "correctAnswer": "C",
+      "explanation": "The document lists 'Analytics & reporting' as a responsibility an Smm may have.",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "EASY",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 3,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
+    {
+      "id": "q-ai-1790594613994-8b5gr",
+      "text": "According to the document, what is the definition of Social Media Management?",
+      "options": [
+        {
+          "id": "A",
+          "text": "The process of selling products directly to consumers online."
+        },
+        {
+          "id": "B",
+          "text": "The process of planning, creating, publishing, managing and analyzing content for a brand or individual across social media platforms."
+        },
+        {
+          "id": "C",
+          "text": "The act of creating advertisements for television and radio."
+        },
+        {
+          "id": "D",
+          "text": "The strategy of managing a company's internal communications."
+        }
+      ],
+      "correctAnswer": "B",
+      "explanation": "The document states: 'Social Media Management is the process of planning, creating, publishing, managing and analyzing content for a brand or individual across social media platforms.'",
+      "category": "Smm Lizzy 20260924 140721 0000 Quiz",
+      "difficulty": "EASY",
+      "points": 1,
+      "timeLimit": 10,
+      "sourceDocument": "Smm lizzy_20260924_140721_0000.pdf",
+      "sourcePage": 2,
+      "status": "APPROVED",
+      "createdAt": "2026-09-28T11:23:33.994Z"
+    },
     {
       "id": "q-ai-1790594240674-6z4a6",
       "text": "Which of the following is explicitly listed as a reason why businesses need social media?",
@@ -4126,6 +4574,102 @@
   ],
   "documents": [
     {
+      "id": "doc-1790594601913-wz1w",
+      "filename": "Smm lizzy_20260924_140721_0000.pdf",
+      "size": 2463,
+      "uploadDate": "2026-09-28T11:23:21.914Z",
+      "status": "READY",
+      "pageCount": 12,
+      "textExtractionStatus": "SUCCESS",
+      "chunks": [
+        {
+          "id": "chunk-doc-1790594601913-wz1w-1",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 1,
+          "section": "Page 1",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nElizabeth Agbana"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-2",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 2,
+          "section": "Page 2",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nSocial Media Management is the process of\nplanning, creating, publishing, managing and\nanalyzing content for a brand or individual\nacross social media platforms."
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-3",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 3,
+          "section": "Page 3",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nResearch\nContent planning\nContent creation\nCopywriting\nPublishing & scheduling\nCommunity management\nAudience engagement\nAnalytics & reporting\nAn Smm may be responsible for :"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-4",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 4,
+          "section": "Page 4",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nBuild awareness\nReach their target audience\nBuild communities\nEducate customers\nGenerate leads\nDrive sales\nBuild trust\nCommunicate with customers\nWhy Do Businesses Need Social Media?"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-5",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 5,
+          "section": "Page 5",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nInstagram — Visual content & community\nTikTok — Short-form video & discovery\nLinkedIn — Professional & B2B content\nFacebook — Communities, businesses &\nbroad audiences\nX — Conversations, trends & real-time\ninformation\nYouTube — Long-form & short-form video\nSocial Media Platforms"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-6",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 6,
+          "section": "Page 6",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nWho are we?\nWho are we talking to?\nWhat do we want to achieve?\nWhy should people care?\nUnderstanding the Brand"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-7",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 7,
+          "section": "Page 7",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nSTRATEGY\nResearch\nPlanning\nGoal setting\nThe Skills of an SMM"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-8",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 8,
+          "section": "Page 8",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nCREATIVE\nCopywriting\nDesign\nVideo/content creation\nThe Skills of an SMM"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-9",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 9,
+          "section": "Page 9",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nMANAGEMENT\nScheduling\nCommunity management\nClient communication\nThe Skills of an SMM"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-10",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 10,
+          "section": "Page 10",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nANALYTICS\nMetrics\nReporting\nOptimization\nThe Skills of an SMM"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-11",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 11,
+          "section": "Page 11",
+          "text": "SOCIAL\tSOCIAL\nMEDIA\tMEDIA\nMANAGEMENT\tMANAGEMENT\nSOCIAL\nMEDIA\nMANAGEMENT\nBrand: A Nigerian skincare brand\nTarget: Young adults\nGoal: Increase awareness and sales\nClass Activity\nWho is the audience?\nWhich platforms would you choose?\nWhat type of content would you create?\nWhat would you want the audience to do?"
+        },
+        {
+          "id": "chunk-doc-1790594601913-wz1w-12",
+          "documentId": "doc-1790594601913-wz1w",
+          "page": 12,
+          "section": "Page 12",
+          "text": "THANK\tTHANK\nYOU!\tYOU!\nTHANK\nYOU!"
+        }
+      ],
+      "questionsGeneratedCount": 13
+    },
+    {
       "id": "doc-1790593719693-eqgn",
       "filename": "Smm lizzy_20260924_140721_0000.pdf",
       "size": 99886,
@@ -4341,13 +4885,13 @@
       "firstName": "hassan",
       "username": "hassan",
       "joinedAt": "2026-09-28T10:55:26.845Z",
-      "isConnected": true,
+      "isConnected": false,
       "score": 0,
       "correctAnswers": 0,
       "wrongAnswers": 0,
       "unanswered": 0,
       "totalResponseTimeMs": 0,
-      "lastActiveAt": "2026-09-28T11:01:29.109Z"
+      "lastActiveAt": "2026-09-28T13:01:22.252Z"
     }
   ],
   "answers": [
@@ -4393,6 +4937,48 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "log-1790601783420-dg2zs",
+      "action": "DOCUMENT_UPLOADED",
+      "details": "Uploaded document Smm lizzy_20260924_140721_0000.pdf",
+      "timestamp": "2026-09-28T13:23:03.420Z",
+      "actor": "Organizer"
+    },
+    {
+      "id": "log-1790601783416-2ueij",
+      "action": "QUESTIONS_BULK_ADDED",
+      "details": "Added 3 questions",
+      "timestamp": "2026-09-28T13:23:03.416Z",
+      "actor": "AI / Organizer"
+    },
+    {
+      "id": "log-1790594637271-f24sq",
+      "action": "GAME_SAVED",
+      "details": "Saved game Smm Lizzy 20260924 140721 0000 Quiz [J4ROQN]",
+      "timestamp": "2026-09-28T11:23:57.271Z",
+      "actor": "Organizer"
+    },
+    {
+      "id": "log-1790594614043-fw4ax",
+      "action": "DOCUMENT_UPLOADED",
+      "details": "Uploaded document Smm lizzy_20260924_140721_0000.pdf",
+      "timestamp": "2026-09-28T11:23:34.043Z",
+      "actor": "Organizer"
+    },
+    {
+      "id": "log-1790594614040-s4dlv",
+      "action": "QUESTIONS_BULK_ADDED",
+      "details": "Added 10 questions",
+      "timestamp": "2026-09-28T11:23:34.040Z",
+      "actor": "AI / Organizer"
+    },
+    {
+      "id": "log-1790594601915-mqvad",
+      "action": "DOCUMENT_UPLOADED",
+      "details": "Uploaded document Smm lizzy_20260924_140721_0000.pdf",
+      "timestamp": "2026-09-28T11:23:21.915Z",
+      "actor": "Organizer"
+    },
     {
       "id": "log-1790594240681-xbbx5",
       "action": "DOCUMENT_UPLOADED",
@@ -5749,48 +6335,6 @@
       "action": "GAME_SAVED",
       "details": "Saved game AI & Tech Grand Championship (40 Questions) [SA50AI]",
       "timestamp": "2026-09-28T10:41:32.145Z",
-      "actor": "Organizer"
-    },
-    {
-      "id": "log-1790592092144-hjdj8",
-      "action": "GAME_STATUS_CHANGED",
-      "details": "Game AI & Tech Grand Championship (40 Questions) transition to COUNTDOWN",
-      "timestamp": "2026-09-28T10:41:32.144Z",
-      "actor": "Host"
-    },
-    {
-      "id": "log-1790591930007-0l7pz",
-      "action": "GAME_SAVED",
-      "details": "Saved game AI & Tech Grand Championship (40 Questions) [SA50AI]",
-      "timestamp": "2026-09-28T10:38:50.007Z",
-      "actor": "Organizer"
-    },
-    {
-      "id": "log-1790591648213-ls43f",
-      "action": "DOCUMENT_DELETED",
-      "details": "Deleted document building-with-claude-code-and-ai-agents.pdf",
-      "timestamp": "2026-09-28T10:34:08.214Z",
-      "actor": "Organizer"
-    },
-    {
-      "id": "log-1790591591363-o8f5q",
-      "action": "GAME_SAVED",
-      "details": "Saved game RECAP  Quiz [FSUKL6]",
-      "timestamp": "2026-09-28T10:33:11.363Z",
-      "actor": "Organizer"
-    },
-    {
-      "id": "log-1790591524998-l6nn3",
-      "action": "GAME_DELETED",
-      "details": "Deleted game Digital Skills Challenge (game-digital-skills)",
-      "timestamp": "2026-09-28T10:32:04.998Z",
-      "actor": "Organizer"
-    },
-    {
-      "id": "log-1790591522617-jy4of",
-      "action": "GAME_DELETED",
-      "details": "Deleted game Social Media Challenge (game-social-media)",
-      "timestamp": "2026-09-28T10:32:02.617Z",
       "actor": "Organizer"
     }
   ]

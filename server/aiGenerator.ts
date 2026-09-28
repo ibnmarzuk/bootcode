@@ -173,10 +173,30 @@ REMINDER: Absolutely zero questions outside of this document's text.`;
 
           const rawText = response.text || '';
           if (rawText.trim().length > 0) {
-            const parsed = JSON.parse(rawText) as RawGeneratedItem[];
-            const validated = this.validateAndTransform(parsed, documentName, autoApprove);
-            if (validated.length > 0) {
-              return validated.slice(0, count);
+            // Strip any markdown code fences or conversational text wrapper
+            let jsonString = rawText.trim();
+            const fenceMatch = jsonString.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+            if (fenceMatch) {
+              jsonString = fenceMatch[1].trim();
+            } else {
+              // Try finding array boundaries [ ... ]
+              const firstBracket = jsonString.indexOf('[');
+              const lastBracket = jsonString.lastIndexOf(']');
+              if (firstBracket !== -1 && lastBracket > firstBracket) {
+                jsonString = jsonString.substring(firstBracket, lastBracket + 1);
+              }
+            }
+
+            try {
+              const parsed = JSON.parse(jsonString) as RawGeneratedItem[];
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                const validated = this.validateAndTransform(parsed, documentName, autoApprove);
+                if (validated.length > 0) {
+                  return validated.slice(0, count);
+                }
+              }
+            } catch (jsonErr: any) {
+              console.warn(`[AIQuestionGenerator] JSON parse error for model ${model}:`, jsonErr?.message || jsonErr);
             }
           }
         } catch (err: any) {
