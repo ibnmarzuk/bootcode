@@ -491,6 +491,13 @@ async function setupServer() {
   });
 }
 
-setupServer().catch((err) => {
-  console.error('Failed to start QUIZTERM server:', err);
-});
+// Vercel imports the Express app as a serverless function, so it must not
+// start its own listener there. Local and container deployments still use
+// this file as the process entrypoint.
+if (process.env.VERCEL !== '1') {
+  setupServer().catch((err) => {
+    console.error('Failed to start QUIZTERM server:', err);
+  });
+}
+
+export { app };
