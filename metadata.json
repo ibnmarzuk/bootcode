@@ -1,0 +1,6 @@
+{
+  "name": "QUIZTERM - Real-Time Terminal Quiz & Competition Platform",
+  "description": "Production-ready, mobile-first real-time quiz and competition platform with live terminal-inspired interface, AI question generation from documents, and server-authoritative timing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
