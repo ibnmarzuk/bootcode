@@ -17,10 +17,12 @@ import {
   LeaderboardEntry,
   Participant
 } from './types';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [currentTab, setCurrentTab] = useState<SimpleNavTab>('host');
   const [isParticipantMode, setIsParticipantMode] = useState<boolean>(false);
   const [initialJoinCode, setInitialJoinCode] = useState<string>('SA50AI');
@@ -60,8 +62,9 @@ export default function App() {
     }
   }, []);
 
-  // Fetch initial database state
-  const loadData = useCallback(async () => {
+  // Fetch initial database state with automatic retry & cache hydration
+  const loadData = useCallback(async (isManual = false) => {
+    if (isManual) setIsRetrying(true);
     try {
       const [evts, gms, qs, docs] = await Promise.all([
         api.getEvents(),
@@ -70,27 +73,41 @@ export default function App() {
         api.getDocuments()
       ]);
 
-      setEvents(evts);
-      setGames(gms);
-      setQuestions(qs);
-      setDocuments(docs);
+      if (evts) setEvents(evts);
+      if (gms) setGames(gms);
+      if (qs) setQuestions(qs);
+      if (docs) setDocuments(docs);
+      setLoadError(null);
 
-      if (gms.length > 0 && !selectedGameId) {
+      setSelectedGameId(prev => {
+        if (prev && gms?.some(g => g.id === prev)) return prev;
+        if (!gms || gms.length === 0) return '';
         const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
         const targetCode = initialJoinCode || urlParams?.get('join') || urlParams?.get('code');
         const matched = targetCode ? gms.find(g => g.joinCode?.toUpperCase() === targetCode.toUpperCase()) : null;
-        setSelectedGameId(matched ? matched.id : gms[0].id);
-      }
-    } catch (err) {
-      console.error('Failed to load initial data:', err);
+        return matched ? matched.id : gms[0].id;
+      });
+    } catch (err: any) {
+      console.warn('[QuizTerm] Initial data loading will retry automatically:', err?.message || err);
+      setLoadError(err?.message || 'Connecting to server...');
     } finally {
       setLoading(false);
+      if (isManual) setIsRetrying(false);
     }
-  }, [selectedGameId]);
+  }, [initialJoinCode]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Periodic automatic reconnection if initial load had an issue
+  useEffect(() => {
+    if (!loadError) return;
+    const timer = setTimeout(() => {
+      loadData();
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [loadError, loadData]);
 
   // Load participants & leaderboard for selected game
   useEffect(() => {
@@ -230,6 +247,23 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6">
+        {loadError && (
+          <div className="mb-4 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 flex items-center justify-between text-xs text-amber-300">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>Network sync in progress: {loadError}. Reconnecting automatically...</span>
+            </div>
+            <button
+              onClick={() => loadData(true)}
+              disabled={isRetrying}
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 rounded text-amber-200 text-xs transition-colors cursor-pointer"
+            >
+              <RefreshCw className={`w-3 h-3 ${isRetrying ? 'animate-spin' : ''}`} />
+              Retry Now
+            </button>
+          </div>
+        )}
+
         {currentTab === 'host' && activeGame && (
           <HostControlRoom
             game={activeGame}
@@ -250,6 +284,24 @@ export default function App() {
               setIsParticipantMode(true);
             }}
           />
+        )}
+
+        {currentTab === 'host' && !activeGame && (
+          <div className="bg-[#0f172a]/90 border border-slate-800 rounded-xl p-8 text-center max-w-lg mx-auto mt-12 space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto font-mono text-xl">
+              🎮
+            </div>
+            <h3 className="text-lg font-bold text-slate-100">No Competition Room Selected</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Create a new competition session in Game Manager or select an existing match to launch host controls.
+            </p>
+            <button
+              onClick={() => setCurrentTab('games')}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer shadow-lg shadow-emerald-950/40"
+            >
+              Go to Game Manager
+            </button>
+          </div>
         )}
 
         {currentTab === 'questions' && (

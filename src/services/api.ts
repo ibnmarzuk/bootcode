@@ -8,91 +8,159 @@ import {
   AuditLog
 } from '../types';
 
+// Helper for caching and resilient network fetches with automatic exponential backoff retry
+async function fetchWithRetry<T>(
+  url: string,
+  options?: RequestInit,
+  retries: number = 3,
+  delayMs: number = 300
+): Promise<T> {
+  let lastError: any;
+
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+
+      if (!res.ok) {
+        let errorMsg = `HTTP ${res.status}: ${res.statusText}`;
+        try {
+          const errorJson = await res.json();
+          if (errorJson.error) errorMsg = errorJson.error;
+        } catch {
+          // Response body was not JSON
+        }
+        // Don't retry 4xx errors except 429
+        if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+          throw new Error(errorMsg);
+        }
+        throw new Error(errorMsg);
+      }
+
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        return (await res.json()) as T;
+      }
+      return (await res.text()) as unknown as T;
+    } catch (err: any) {
+      lastError = err;
+      // If we still have retries left, wait with backoff
+      if (attempt < retries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt)));
+      }
+    }
+  }
+
+  throw lastError || new Error(`Network request to ${url} failed after ${retries} attempts.`);
+}
+
+// Local storage cache helper to guarantee instantaneous initial load & offline resilience
+function getLocalCache<T>(key: string): T | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(`quizterm_cache_${key}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setLocalCache<T>(key: string, data: T): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(`quizterm_cache_${key}`, JSON.stringify(data));
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
 export const api = {
   // Health & App Info
   async getHealth(): Promise<{ status: string; uptime: number; timestamp: number; serverTimeIso: string; publicAppUrl?: string }> {
-    const res = await fetch('/api/health');
-    return res.json();
+    return fetchWithRetry<{ status: string; uptime: number; timestamp: number; serverTimeIso: string; publicAppUrl?: string }>('/api/health');
   },
 
   async getAppInfo(): Promise<{ publicAppUrl?: string; environment: string; serverTime: string }> {
     try {
-      const res = await fetch('/api/app-info');
-      return await res.json();
+      return await fetchWithRetry<{ publicAppUrl?: string; environment: string; serverTime: string }>('/api/app-info', undefined, 2, 200);
     } catch {
       return { publicAppUrl: '', environment: 'production', serverTime: new Date().toISOString() };
     }
   },
 
-  // Events
+  // Events (with cache fallback)
   async getEvents(): Promise<QuizEvent[]> {
-    const res = await fetch('/api/events');
-    return res.json();
+    try {
+      const data = await fetchWithRetry<QuizEvent[]>('/api/events');
+      setLocalCache('events', data);
+      return data;
+    } catch (err) {
+      const cached = getLocalCache<QuizEvent[]>('events');
+      if (cached && cached.length > 0) return cached;
+      throw err;
+    }
   },
 
   async getEvent(id: string): Promise<QuizEvent> {
-    const res = await fetch(`/api/events/${id}`);
-    return res.json();
+    return fetchWithRetry<QuizEvent>(`/api/events/${id}`);
   },
 
   async saveEvent(event: Partial<QuizEvent>): Promise<QuizEvent> {
-    const res = await fetch('/api/events', {
+    return fetchWithRetry<QuizEvent>('/api/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(event)
-    });
-    return res.json();
+    }, 2, 300);
   },
 
   async deleteEvent(id: string): Promise<{ success: boolean }> {
-    const res = await fetch(`/api/events/${id}`, { method: 'DELETE' });
-    return res.json();
+    return fetchWithRetry<{ success: boolean }>(`/api/events/${id}`, { method: 'DELETE' }, 2, 300);
   },
 
-  // Games
+  // Games (with cache fallback)
   async getGames(eventId?: string): Promise<QuizGame[]> {
     const url = eventId ? `/api/games?eventId=${eventId}` : '/api/games';
-    const res = await fetch(url);
-    return res.json();
+    try {
+      const data = await fetchWithRetry<QuizGame[]>(url);
+      if (!eventId) setLocalCache('games', data);
+      return data;
+    } catch (err) {
+      if (!eventId) {
+        const cached = getLocalCache<QuizGame[]>('games');
+        if (cached && cached.length > 0) return cached;
+      }
+      throw err;
+    }
   },
 
   async getGame(id: string): Promise<QuizGame> {
-    const res = await fetch(`/api/games/${id}`);
-    return res.json();
+    return fetchWithRetry<QuizGame>(`/api/games/${id}`);
   },
 
   async getGameByCode(code: string): Promise<QuizGame> {
-    const res = await fetch(`/api/games/code/${code}`);
-    if (!res.ok) {
-      throw new Error('Game not found with code: ' + code);
-    }
-    return res.json();
+    return fetchWithRetry<QuizGame>(`/api/games/code/${encodeURIComponent(code)}`);
   },
 
   async saveGame(game: Partial<QuizGame>): Promise<QuizGame> {
-    const res = await fetch('/api/games', {
+    return fetchWithRetry<QuizGame>('/api/games', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(game)
-    });
-    return res.json();
+    }, 2, 300);
   },
 
   async updateGameStatus(id: string, status: QuizGame['status']): Promise<QuizGame> {
-    const res = await fetch(`/api/games/${id}/status`, {
+    return fetchWithRetry<QuizGame>(`/api/games/${id}/status`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
-    });
-    return res.json();
+    }, 2, 300);
   },
 
   async deleteGame(id: string): Promise<{ success: boolean }> {
-    const res = await fetch(`/api/games/${id}`, { method: 'DELETE' });
-    return res.json();
+    return fetchWithRetry<{ success: boolean }>(`/api/games/${id}`, { method: 'DELETE' }, 2, 300);
   },
 
-  // Questions
+  // Questions (with cache fallback)
   async getQuestions(filters?: { category?: string; difficulty?: string; status?: string; search?: string }): Promise<Question[]> {
     const params = new URLSearchParams();
     if (filters?.category) params.append('category', filters.category);
@@ -100,42 +168,59 @@ export const api = {
     if (filters?.status) params.append('status', filters.status);
     if (filters?.search) params.append('search', filters.search);
 
-    const res = await fetch(`/api/questions?${params.toString()}`);
-    return res.json();
+    const url = `/api/questions?${params.toString()}`;
+    try {
+      const data = await fetchWithRetry<Question[]>(url);
+      if (!filters?.category && !filters?.difficulty && !filters?.status && !filters?.search) {
+        setLocalCache('questions', data);
+      }
+      return data;
+    } catch (err) {
+      if (!filters?.category && !filters?.difficulty && !filters?.status && !filters?.search) {
+        const cached = getLocalCache<Question[]>('questions');
+        if (cached && cached.length > 0) return cached;
+      }
+      throw err;
+    }
   },
 
   async saveQuestion(question: Partial<Question>): Promise<Question> {
-    const res = await fetch('/api/questions', {
+    return fetchWithRetry<Question>('/api/questions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(question)
-    });
-    return res.json();
+    }, 2, 300);
   },
 
   async updateQuestionStatus(id: string, status: Question['status']): Promise<Question> {
-    const res = await fetch(`/api/questions/${id}/status`, {
+    return fetchWithRetry<Question>(`/api/questions/${id}/status`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
-    });
-    return res.json();
+    }, 2, 300);
   },
 
   async approveAllQuestions(): Promise<{ success: boolean; approvedCount: number; questions: Question[] }> {
-    const res = await fetch('/api/questions/approve-all', { method: 'POST' });
-    return res.json();
+    return fetchWithRetry<{ success: boolean; approvedCount: number; questions: Question[] }>('/api/questions/approve-all', {
+      method: 'POST'
+    }, 2, 300);
   },
 
   async deleteQuestion(id: string): Promise<{ success: boolean }> {
-    const res = await fetch(`/api/questions/${id}`, { method: 'DELETE' });
-    return res.json();
+    return fetchWithRetry<{ success: boolean }>(`/api/questions/${id}`, { method: 'DELETE' }, 2, 300);
   },
 
-  // Documents
+  // Documents (with cache fallback)
   async getDocuments(): Promise<DocumentItem[]> {
-    const res = await fetch('/api/documents');
-    return res.json();
+    try {
+      const data = await fetchWithRetry<DocumentItem[]>('/api/documents');
+      setLocalCache('documents', data);
+      return data;
+    } catch (err) {
+      const cached = getLocalCache<DocumentItem[]>('documents');
+      if (cached && cached.length > 0) return cached;
+      throw err;
+    }
   },
 
   async uploadDocument(payload: {
@@ -150,15 +235,20 @@ export const api = {
       body: JSON.stringify(payload)
     });
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Upload failed');
+      let msg = 'Upload failed';
+      try {
+        const err = await res.json();
+        if (err.error) msg = err.error;
+      } catch {
+        // Not JSON
+      }
+      throw new Error(msg);
     }
     return res.json();
   },
 
   async deleteDocument(id: string): Promise<{ success: boolean }> {
-    const res = await fetch(`/api/documents/${id}`, { method: 'DELETE' });
-    return res.json();
+    return fetchWithRetry<{ success: boolean }>(`/api/documents/${id}`, { method: 'DELETE' }, 2, 300);
   },
 
   // AI Generation
@@ -178,8 +268,14 @@ export const api = {
       body: JSON.stringify(options)
     });
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'AI generation failed');
+      let msg = 'AI generation failed';
+      try {
+        const err = await res.json();
+        if (err.error) msg = err.error;
+      } catch {
+        // Not JSON
+      }
+      throw new Error(msg);
     }
     return res.json();
   },
@@ -196,20 +292,24 @@ export const api = {
       body: JSON.stringify(payload)
     });
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Failed to join game');
+      let msg = 'Failed to join game';
+      try {
+        const err = await res.json();
+        if (err.error) msg = err.error;
+      } catch {
+        // Not JSON
+      }
+      throw new Error(msg);
     }
     return res.json();
   },
 
   async getParticipants(gameId: string): Promise<Participant[]> {
-    const res = await fetch(`/api/participants/${gameId}`);
-    return res.json();
+    return fetchWithRetry<Participant[]>(`/api/participants/${gameId}`, undefined, 2, 250);
   },
 
   async getLeaderboard(gameId: string): Promise<LeaderboardEntry[]> {
-    const res = await fetch(`/api/leaderboard/${gameId}`);
-    return res.json();
+    return fetchWithRetry<LeaderboardEntry[]>(`/api/leaderboard/${gameId}`, undefined, 2, 250);
   },
 
   // QR Code Data URL with standard scannability
@@ -219,15 +319,12 @@ export const api = {
     if (options?.light) params.set('light', options.light);
     if (options?.margin !== undefined) params.set('margin', options.margin.toString());
     if (options?.level) params.set('level', options.level);
-    const res = await fetch(`/api/qr?${params.toString()}`);
-    if (!res.ok) throw new Error('Failed to fetch QR code');
-    const data = await res.json();
+    const data = await fetchWithRetry<{ dataUrl: string; text: string; errorCorrectionLevel: string }>(`/api/qr?${params.toString()}`);
     return data.dataUrl;
   },
 
   // Audit logs
   async getAuditLogs(): Promise<AuditLog[]> {
-    const res = await fetch('/api/audit-logs');
-    return res.json();
+    return fetchWithRetry<AuditLog[]>('/api/audit-logs', undefined, 2, 300);
   }
 };
