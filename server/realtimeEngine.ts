@@ -184,8 +184,20 @@ export class RealtimeEngine {
     const { gameId, questionId, selectedOption } = data || {};
     const participantId = client.participantId;
 
-    if (!participantId || !gameId || !questionId || !selectedOption) {
+    if (
+      !participantId ||
+      !gameId ||
+      client.gameId !== gameId ||
+      !questionId ||
+      !(['A', 'B', 'C', 'D'] as const).includes(selectedOption)
+    ) {
       this.send(ws, 'SUBMISSION_REJECTED', { reason: 'Missing submission parameters' });
+      return;
+    }
+
+    const participant = db.getParticipants(gameId).find(p => p.id === participantId);
+    if (!participant) {
+      this.send(ws, 'SUBMISSION_REJECTED', { reason: 'Participant is not registered in this game' });
       return;
     }
 

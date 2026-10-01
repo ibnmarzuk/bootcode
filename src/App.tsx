@@ -25,7 +25,9 @@ export default function App() {
   const [isRetrying, setIsRetrying] = useState(false);
   const [currentTab, setCurrentTab] = useState<SimpleNavTab>('host');
   const [isParticipantMode, setIsParticipantMode] = useState<boolean>(false);
-  const [initialJoinCode, setInitialJoinCode] = useState<string>('SA50AI');
+  // Leave the code empty until the server data is loaded. The old hard-coded
+  // demo code can point at a completed room after persisted data changes.
+  const [initialJoinCode, setInitialJoinCode] = useState<string>('');
   const [publicAppUrl, setPublicAppUrl] = useState<string>('');
 
   // Entities
@@ -85,7 +87,12 @@ export default function App() {
         const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
         const targetCode = initialJoinCode || urlParams?.get('join') || urlParams?.get('code');
         const matched = targetCode ? gms.find(g => g.joinCode?.toUpperCase() === targetCode.toUpperCase()) : null;
-        return matched ? matched.id : gms[0].id;
+        if (matched && matched.status !== 'COMPLETED' && matched.status !== 'ARCHIVED') {
+          return matched.id;
+        }
+
+        const playable = gms.find(g => g.status !== 'COMPLETED' && g.status !== 'ARCHIVED');
+        return playable?.id || gms[0].id;
       });
     } catch (err: any) {
       console.warn('[QuizTerm] Initial data loading will retry automatically:', err?.message || err);
@@ -226,7 +233,7 @@ export default function App() {
   if (isParticipantMode) {
     return (
       <ParticipantExperience
-        initialJoinCode={initialJoinCode || activeGame?.joinCode || 'SA50AI'}
+        initialJoinCode={initialJoinCode || activeGame?.joinCode || ''}
         onExit={() => setIsParticipantMode(false)}
       />
     );

@@ -34,7 +34,7 @@ const funNames = [
 ];
 
 export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
-  initialJoinCode = 'SA50AI',
+  initialJoinCode = '',
   onExit
 }) => {
   // Join form state

@@ -141,6 +141,10 @@ app.post('/api/games', (req, res) => {
   // Generate unique 6-character alphanumeric join code if not provided
   const existing = body.id ? db.getGameById(body.id) : undefined;
   const joinCode = (body.joinCode || existing?.joinCode || Math.random().toString(36).substring(2, 8)).toUpperCase();
+  const codeOwner = db.getGameByJoinCode(joinCode);
+  if (codeOwner && codeOwner.id !== existing?.id) {
+    return res.status(409).json({ error: `Join code ${joinCode} is already in use. Choose another code.` });
+  }
 
   const game: QuizGame = {
     id: body.id || existing?.id || `game-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -169,6 +173,13 @@ app.post('/api/games', (req, res) => {
 
 app.post('/api/games/:id/status', (req, res) => {
   const { status } = req.body;
+  const validStatuses: QuizGame['status'][] = [
+    'DRAFT', 'READY', 'LOBBY', 'COUNTDOWN', 'LIVE', 'PAUSED',
+    'QUESTION_LOCKED', 'QUESTION_RESULTS', 'COMPLETED', 'ARCHIVED'
+  ];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Invalid game status' });
+  }
   const game = db.updateGameStatus(req.params.id, status);
   if (!game) return res.status(404).json({ error: 'Game not found' });
   realtimeEngine.broadcastRoomState(game.id);
@@ -366,7 +377,13 @@ app.post('/api/participants/join', (req, res) => {
     return res.status(400).json({ error: 'Join code, first name, and username are required.' });
   }
 
-  const game = db.getGameByJoinCode(joinCode);
+  const normalizedFirstName = String(firstName).trim();
+  const normalizedUsername = String(username).trim().toLowerCase();
+  if (normalizedFirstName.length < 1 || normalizedFirstName.length > 40 || !/^[a-z0-9_-]{2,24}$/.test(normalizedUsername)) {
+    return res.status(400).json({ error: 'Use a name up to 40 characters and a username with 2-24 letters, numbers, _ or -.' });
+  }
+
+  const game = db.getGameByJoinCode(String(joinCode));
   if (!game) {
     return res.status(404).json({ error: 'Invalid join code. Please check and try again.' });
   }
@@ -376,7 +393,7 @@ app.post('/api/participants/join', (req, res) => {
   }
 
   // Check unique username within this game
-  const existing = db.getParticipantByUsername(game.id, username);
+  const existing = db.getParticipantByUsername(game.id, normalizedUsername);
   if (existing) {
     // If it's a reconnect with same name, return existing session
     return res.json({
@@ -397,8 +414,8 @@ app.post('/api/participants/join', (req, res) => {
     id: participantId,
     gameId: game.id,
     eventId: game.eventId,
-    firstName: firstName.trim(),
-    username: username.trim().toLowerCase(),
+    firstName: normalizedFirstName,
+    username: normalizedUsername,
     joinedAt: new Date().toISOString(),
     isConnected: true,
     score: 0,
