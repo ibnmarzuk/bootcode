@@ -6,6 +6,7 @@ import { GameManager } from './components/GameManager';
 import { ResultsExport } from './components/ResultsExport';
 import { ProjectorLobbyModal } from './components/ProjectorLobbyModal';
 import { ParticipantExperience } from './components/ParticipantExperience';
+import { OverviewDashboard } from './components/OverviewDashboard';
 import { api } from './services/api';
 import { useRealtime } from './services/useRealtime';
 import { extractJoinCodeFromCurrentUrl } from './services/urlHelper';
@@ -23,7 +24,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
-  const [currentTab, setCurrentTab] = useState<SimpleNavTab>('host');
+  const [currentTab, setCurrentTab] = useState<SimpleNavTab>('overview');
   const [isParticipantMode, setIsParticipantMode] = useState<boolean>(false);
   // Leave the code empty until the server data is loaded. The old hard-coded
   // demo code can point at a completed room after persisted data changes.
@@ -216,8 +217,10 @@ export default function App() {
     setIsProjectorOpen(true);
   };
 
-  // Find active game object
-  const activeGame = games.find(g => g.id === selectedGameId) || games[0];
+  // Find an active game object without surfacing completed history as the
+  // current room when the host has not made an explicit selection.
+  const playableGame = games.find(g => !['COMPLETED', 'ARCHIVED'].includes(g.status));
+  const activeGame = games.find(g => g.id === selectedGameId) || playableGame || games[0];
   const activeEvent = activeGame ? events.find(e => e.id === activeGame.eventId) : events[0];
 
   if (loading) {
@@ -269,6 +272,18 @@ export default function App() {
               Retry Now
             </button>
           </div>
+        )}
+
+        {currentTab === 'overview' && (
+          <OverviewDashboard
+            documents={documents}
+            questions={questions}
+            games={games}
+            activeGame={activeGame}
+            onNavigate={setCurrentTab}
+            onOpenProjector={() => activeGame ? setIsProjectorOpen(true) : setCurrentTab('games')}
+            onToggleParticipant={() => setIsParticipantMode(true)}
+          />
         )}
 
         {currentTab === 'host' && activeGame && (

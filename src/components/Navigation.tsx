@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Terminal,
+  LayoutDashboard,
   Radio,
   HelpCircle,
   Layers,
@@ -13,7 +14,7 @@ import {
 } from 'lucide-react';
 import { sounds } from '../services/sound';
 
-export type SimpleNavTab = 'host' | 'questions' | 'games' | 'results';
+export type SimpleNavTab = 'overview' | 'host' | 'questions' | 'games' | 'results';
 
 interface NavigationProps {
   currentTab: SimpleNavTab;
@@ -40,6 +41,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   };
 
   const navTabs: { id: SimpleNavTab; label: string; icon: React.ReactNode }[] = [
+    { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4 text-slate-300" /> },
     { id: 'host', label: 'Host Live Room', icon: <Radio className="w-4 h-4 text-emerald-400" /> },
     { id: 'questions', label: 'Questions & AI', icon: <Sparkles className="w-4 h-4 text-amber-400" /> },
     { id: 'games', label: 'Games & Events', icon: <Layers className="w-4 h-4 text-blue-400" /> },
