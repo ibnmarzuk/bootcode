@@ -89,7 +89,7 @@ export default function App() {
       setLoadError(null);
 
       setSelectedGameId(prev => {
-        if (prev && gms?.some(g => g.id === prev)) return prev;
+        if (prev && gms?.some(g => g.id === prev && !['COMPLETED', 'ARCHIVED'].includes(g.status))) return prev;
         if (!gms || gms.length === 0) return '';
         const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
         const targetCode = initialJoinCode || urlParams?.get('join') || urlParams?.get('code');

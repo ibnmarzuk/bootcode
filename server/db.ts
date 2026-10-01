@@ -835,6 +835,28 @@ class DatabaseStore {
     return game;
   }
 
+  resetGameForReplay(gameId: string): QuizGame | undefined {
+    const game = this.getGameById(gameId);
+    if (!game) return undefined;
+
+    this.data.answers = this.data.answers.filter(answer => answer.gameId !== gameId);
+    for (const participant of this.getParticipants(gameId)) {
+      participant.score = 0;
+      participant.correctAnswers = 0;
+      participant.wrongAnswers = 0;
+      participant.unanswered = 0;
+      participant.totalResponseTimeMs = 0;
+      participant.lastActiveAt = new Date().toISOString();
+    }
+    game.status = 'READY';
+    game.currentQuestionIndex = 0;
+    delete game.startedAt;
+    delete game.endedAt;
+    this.addAuditLog('GAME_RESET_FOR_REPLAY', `Reset game ${game.name} [${game.joinCode}]`, 'Host');
+    this.saveData();
+    return game;
+  }
+
   deleteGame(id: string): boolean {
     const idx = this.data.games.findIndex(g => g.id === id);
     if (idx >= 0) {

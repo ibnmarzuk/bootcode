@@ -271,6 +271,10 @@ export class RealtimeEngine {
     const game = db.getGameById(gameId);
     if (!game || game.questionIds.length === 0) return;
 
+    if (game.status === 'COMPLETED' || game.status === 'ARCHIVED') {
+      db.resetGameForReplay(gameId);
+    }
+
     db.updateGameStatus(gameId, 'COUNTDOWN');
     game.currentQuestionIndex = 0;
     db.saveGame(game);

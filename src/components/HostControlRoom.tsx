@@ -186,13 +186,13 @@ export const HostControlRoom: React.FC<HostControlRoomProps> = ({
       {/* Primary Big Control Buttons */}
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2.5">
-          {status === 'LOBBY' || status === 'READY' ? (
+          {status === 'LOBBY' || status === 'READY' || status === 'COMPLETED' || status === 'ARCHIVED' ? (
             <button
               onClick={onStartGame}
               className="flex items-center space-x-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
             >
               <Play className="w-4 h-4 fill-slate-950" />
-              <span>START GAME (3-2-1)</span>
+              <span>{status === 'COMPLETED' || status === 'ARCHIVED' ? 'RESTART GAME (3-2-1)' : 'START GAME (3-2-1)'}</span>
             </button>
           ) : status === 'LIVE' ? (
             <button
