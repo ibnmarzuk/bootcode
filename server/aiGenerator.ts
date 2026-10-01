@@ -60,7 +60,8 @@ export class AIQuestionGenerator {
       .join('\n\n---\n\n');
 
     if (ai) {
-      const systemInstruction = `You are a strict, precise academic test author for live competition games.
+      try {
+        const systemInstruction = `You are a strict, precise academic test author for live competition games.
 ABSOLUTE MANDATORY GROUNDING RULE - ZERO OUTSIDE KNOWLEDGE:
 1. Every single question, all 4 options, the correct answer, and the explanation MUST be 100% sourced and factually verifiable SOLELY from the provided document content.
 2. You are strictly FORBIDDEN from using any external world knowledge, unmentioned facts, or outside topics.
@@ -160,16 +161,24 @@ REMINDER: Absolutely zero questions outside of this document's text.`;
         temperature: 0.2
       };
 
-      // Model cascade: try fast models in order of availability
-      const candidateModels = ['gemini-3.1-flash-lite', 'gemini-3.8-flash', 'gemini-flash-latest'];
+      // Keep the hosted request bounded. If Gemini is unavailable, the
+      // document-grounded generator below still produces usable questions.
+      // One bounded attempt is enough; retrying multiple models can exceed a
+      // serverless function's execution window before the local fallback.
+      const candidateModels = ['gemini-2.5-flash'];
 
       for (const model of candidateModels) {
         try {
-          const response = await ai.models.generateContent({
-            model,
-            contents: contentsPayload,
-            config: generationConfig
-          });
+          const response = await Promise.race([
+            ai.models.generateContent({
+              model,
+              contents: contentsPayload,
+              config: generationConfig
+            }),
+            new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error('AI generation timed out')), 5000)
+            )
+          ]);
 
           const rawText = response.text || '';
           if (rawText.trim().length > 0) {
@@ -203,6 +212,11 @@ REMINDER: Absolutely zero questions outside of this document's text.`;
           console.warn(`[AIQuestionGenerator] Model ${model} generation attempt returned: ${err?.message || err}`);
           // If error is high demand (503), continue to next model in cascade
         }
+      }
+      } catch (err: any) {
+      // AI is an enhancement, not a prerequisite for quiz generation. Keep
+      // the request alive and use the strictly document-grounded fallback.
+      console.warn('[AIQuestionGenerator] AI unavailable; using local fallback:', err?.message || err);
       }
     }
 

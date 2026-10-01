@@ -350,7 +350,11 @@ app.post('/api/generate-questions', async (req, res) => {
       category,
       language,
       autoApprove: !!autoApprove,
-      base64Pdf
+      // The upload route has already extracted and chunked this document.
+      // Do not send the full PDF to Gemini a second time; this avoids large
+      // serverless payloads and lets generation fall back quickly if AI is
+      // unavailable.
+      base64Pdf: doc ? undefined : base64Pdf
     });
 
     // Save questions to database
