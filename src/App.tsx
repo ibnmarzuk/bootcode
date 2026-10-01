@@ -21,11 +21,15 @@ import {
 import { Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function App() {
+  const isAdminRoute = typeof window !== 'undefined' && (
+    window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/')
+  );
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const [currentTab, setCurrentTab] = useState<SimpleNavTab>('overview');
-  const [isParticipantMode, setIsParticipantMode] = useState<boolean>(false);
+  // The public root is participant-first. Hosts use the separate /admin URL.
+  const [isParticipantMode, setIsParticipantMode] = useState<boolean>(() => !isAdminRoute);
   // Leave the code empty until the server data is loaded. The old hard-coded
   // demo code can point at a completed room after persisted data changes.
   const [initialJoinCode, setInitialJoinCode] = useState<string>('');
@@ -52,8 +56,10 @@ export default function App() {
       if (detectedCode) {
         setInitialJoinCode(detectedCode);
         setIsParticipantMode(true);
-      } else if (modeParam === 'participant') {
+      } else if (!isAdminRoute || modeParam === 'participant') {
         setIsParticipantMode(true);
+      } else {
+        setIsParticipantMode(false);
       }
 
       // Fetch public server URL info for QR code rendering
@@ -236,8 +242,7 @@ export default function App() {
   if (isParticipantMode) {
     return (
       <ParticipantExperience
-        initialJoinCode={initialJoinCode || activeGame?.joinCode || ''}
-        onExit={() => setIsParticipantMode(false)}
+        initialJoinCode={initialJoinCode}
       />
     );
   }
@@ -249,8 +254,6 @@ export default function App() {
       <Navigation
         currentTab={currentTab}
         onTabChange={setCurrentTab}
-        isParticipantMode={isParticipantMode}
-        onToggleParticipantMode={setIsParticipantMode}
         activeGameCode={activeGame?.joinCode || 'SA50AI'}
         latency={latency}
       />
@@ -282,7 +285,10 @@ export default function App() {
             activeGame={activeGame}
             onNavigate={setCurrentTab}
             onOpenProjector={() => activeGame ? setIsProjectorOpen(true) : setCurrentTab('games')}
-            onToggleParticipant={() => setIsParticipantMode(true)}
+            onToggleParticipant={() => {
+              setInitialJoinCode(activeGame?.joinCode || '');
+              setIsParticipantMode(true);
+            }}
           />
         )}
 

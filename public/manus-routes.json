@@ -1,1 +1,1 @@
-{"routes":[{"path":"/","title":"QuizTerm quiz studio"}]}
+{"routes":[{"path":"/","title":"QuizTerm participant join"},{"path":"/join/:code","title":"Join QuizTerm room"},{"path":"/admin","title":"QuizTerm admin console"}]}

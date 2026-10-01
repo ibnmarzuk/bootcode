@@ -33,6 +33,7 @@ export class RealtimeEngine {
       timeLimit: number;
       isLocked: boolean;
       answeredParticipantIds: Set<string>;
+      firstCorrectParticipantId?: string;
     }
   > = new Map();
 
@@ -225,7 +226,14 @@ export class RealtimeEngine {
     const question = activeState.question;
     const isCorrect = question.correctAnswer === selectedOption;
     const game = db.getGameById(gameId);
-    const pointsAwarded = isCorrect ? (game?.pointsPerCorrect ?? 1) : 0;
+    // The first correct click wins the speed bonus. The server receives and
+    // orders submissions, so client clocks cannot manufacture the bonus.
+    const isFirstCorrect = isCorrect && !activeState.firstCorrectParticipantId;
+    if (isFirstCorrect) {
+      activeState.firstCorrectParticipantId = participantId;
+    }
+    const basePoints = game?.pointsPerCorrect ?? 1;
+    const pointsAwarded = isCorrect ? basePoints + (isFirstCorrect ? 1 : 0) : 0;
     const responseTimeMs = Math.max(50, now - activeState.startTime);
 
     // Authoritative recording in database

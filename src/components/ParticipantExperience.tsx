@@ -8,7 +8,6 @@ import {
   Users,
   Radio,
   ArrowRight,
-  ShieldCheck,
   RotateCcw,
   Sparkles,
   Dice5,
@@ -21,7 +20,6 @@ import { Participant, QuizGame } from '../types';
 
 interface ParticipantExperienceProps {
   initialJoinCode?: string;
-  onExit?: () => void;
 }
 
 const funNames = [
@@ -34,8 +32,7 @@ const funNames = [
 ];
 
 export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
-  initialJoinCode = '',
-  onExit
+  initialJoinCode = ''
 }) => {
   // Join form state
   const [joinCode, setJoinCode] = useState(initialJoinCode);
@@ -280,15 +277,6 @@ export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
             <span className="font-bold text-sm tracking-wide text-white">QUIZTERM</span>
           </div>
 
-          {onExit && (
-            <button
-              onClick={onExit}
-              className="text-xs px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-colors flex items-center space-x-1"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Switch to Admin</span>
-            </button>
-          )}
         </div>
 
         {/* Friendly Join Form */}
@@ -522,14 +510,6 @@ export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
           </div>
 
           <div className="flex items-center space-x-3">
-            {onExit && (
-              <button
-                onClick={onExit}
-                className="text-xs text-slate-400 hover:text-white"
-              >
-                Admin
-              </button>
-            )}
             <button
               onClick={handleLeaveSession}
               className="text-xs text-rose-400 hover:underline"
@@ -595,11 +575,6 @@ export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
       <div className="min-h-screen bg-[#090d16] text-white flex flex-col justify-between p-4 sm:p-6 terminal-grid">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <span className="font-bold text-sm text-emerald-400">Quiz Completed</span>
-          {onExit && (
-            <button onClick={onExit} className="text-xs text-slate-400 hover:text-white">
-              Admin View
-            </button>
-          )}
         </div>
 
         <div className="w-full max-w-sm mx-auto my-auto text-center space-y-5 py-4">
@@ -775,7 +750,7 @@ export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
               </span>
               {mySubmission && (
                 <span className={mySubmission.isCorrect ? 'text-emerald-400 font-bold' : 'text-rose-400'}>
-                  {mySubmission.isCorrect ? '🎉 +1 Point!' : '0 Points'}
+                  {mySubmission.isCorrect ? `+${mySubmission.pointsAwarded || 0} Points` : '0 Points'}
                 </span>
               )}
             </div>
@@ -792,11 +767,7 @@ export const ParticipantExperience: React.FC<ParticipantExperienceProps> = ({
       {/* Bottom user footer */}
       <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
         <span>@{participant.username}</span>
-        {onExit && (
-          <button onClick={onExit} className="hover:text-slate-300">
-            Switch to Admin
-          </button>
-        )}
+        <span className="font-mono text-[10px] uppercase tracking-wider text-slate-600">Player mode</span>
       </div>
     </div>
   );

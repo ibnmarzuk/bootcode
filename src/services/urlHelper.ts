@@ -29,7 +29,7 @@ export function getPublicBaseUrl(serverPublicUrl?: string): string {
 export function getPublicJoinUrl(joinCode: string, serverPublicUrl?: string, customBaseUrl?: string): string {
   const code = encodeURIComponent((joinCode || '').trim().toUpperCase());
   const base = customBaseUrl ? customBaseUrl.replace(/\/$/, '') : getPublicBaseUrl(serverPublicUrl);
-  return `${base}/?join=${code}`;
+  return `${base}/join/${code}`;
 }
 
 /**

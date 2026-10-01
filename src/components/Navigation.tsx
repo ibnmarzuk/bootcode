@@ -1,12 +1,9 @@
 import React from 'react';
 import {
-  Terminal,
   LayoutDashboard,
   Radio,
-  HelpCircle,
   Layers,
   Download,
-  Smartphone,
   Volume2,
   VolumeX,
   Sparkles,
@@ -19,8 +16,6 @@ export type SimpleNavTab = 'overview' | 'host' | 'questions' | 'games' | 'result
 interface NavigationProps {
   currentTab: SimpleNavTab;
   onTabChange: (tab: SimpleNavTab) => void;
-  isParticipantMode: boolean;
-  onToggleParticipantMode: (isParticipant: boolean) => void;
   activeGameCode?: string;
   latency?: number;
 }
@@ -28,8 +23,6 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({
   currentTab,
   onTabChange,
-  isParticipantMode,
-  onToggleParticipantMode,
   activeGameCode = 'SA50AI',
   latency = 12
 }) => {
@@ -50,7 +43,7 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <header className="border-b border-slate-800 bg-[#0d131f]/95 backdrop-blur-md sticky top-0 z-40">
-      {/* Top bar with brand and Mode Switcher */}
+      {/* Top bar for the private host console */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-15">
         {/* Brand */}
         <div className="flex items-center space-x-3">
@@ -73,32 +66,10 @@ export const Navigation: React.FC<NavigationProps> = ({
           </div>
         </div>
 
-        {/* Global Mode Switcher: Participant vs Host Admin */}
         <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className="bg-slate-900 border border-slate-800 p-0.5 rounded-xl flex items-center shadow-inner">
-            <button
-              onClick={() => onToggleParticipantMode(false)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                !isParticipantMode
-                  ? 'bg-slate-800 text-emerald-400 shadow-sm font-semibold'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Admin Host</span>
-            </button>
-
-            <button
-              onClick={() => onToggleParticipantMode(true)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                isParticipantMode
-                  ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              <span>Participant Play</span>
-            </button>
+          <div className="hidden items-center gap-1.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-300 sm:flex">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>Private admin console</span>
           </div>
 
           {/* Sound toggle */}
@@ -112,30 +83,27 @@ export const Navigation: React.FC<NavigationProps> = ({
         </div>
       </div>
 
-      {/* Admin tabs - shown only in Admin mode */}
-      {!isParticipantMode && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-none border-t border-slate-800/60">
-          <nav className="flex space-x-1 py-1.5">
-            {navTabs.map((tab) => {
-              const isActive = currentTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => onTabChange(tab.id)}
-                  className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
-                    isActive
-                      ? 'bg-slate-800 text-white font-semibold border border-slate-700 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                  }`}
-                >
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 overflow-x-auto scrollbar-none border-t border-slate-800/60">
+        <nav className="flex space-x-1 py-1.5">
+          {navTabs.map((tab) => {
+            const isActive = currentTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
+                  isActive
+                    ? 'bg-slate-800 text-white font-semibold border border-slate-700 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
 };
