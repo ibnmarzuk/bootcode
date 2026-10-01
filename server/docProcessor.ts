@@ -1,5 +1,4 @@
 import { DocumentItem, DocumentChunk } from '../src/types';
-import { PDFParse } from 'pdf-parse';
 
 export class DocumentProcessor {
   /**
@@ -151,6 +150,10 @@ export class DocumentProcessor {
     }
 
     try {
+      // Load the parser only when a PDF is actually processed. This keeps
+      // health and non-PDF API routes independent from optional parser
+      // runtime dependencies in serverless deployments.
+      const { PDFParse } = await import('pdf-parse');
       const parser = new PDFParse({ data: buffer });
       const parsed = await parser.getText();
 

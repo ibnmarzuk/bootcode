@@ -20,15 +20,19 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 const app = express();
 const httpServer = createServer(app);
 
-// Attach WebSocket server on /ws
-const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+// WebSockets are supported by the local/container server, but Vercel's
+// serverless runtime does not expose a long-lived upgrade server. Avoid
+// constructing the WebSocket listener during a serverless function import.
+if (process.env.VERCEL !== '1') {
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
 
-wss.on('connection', (ws) => {
-  realtimeEngine.registerClient(ws);
-  ws.on('message', (msg) => {
-    realtimeEngine.handleMessage(ws, msg.toString());
+  wss.on('connection', (ws) => {
+    realtimeEngine.registerClient(ws);
+    ws.on('message', (msg) => {
+      realtimeEngine.handleMessage(ws, msg.toString());
+    });
   });
-});
+}
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
